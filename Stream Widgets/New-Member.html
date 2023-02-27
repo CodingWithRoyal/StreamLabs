@@ -1,0 +1,106 @@
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@900&display=swap" rel="stylesheet">
+    <style>
+      body {
+        position: absolute;
+        padding: 0px;
+        margin: 0px;
+        width: 100%;
+      }
+
+      div#main_container,
+      div#main_container::before,
+      div#main_container::after,
+      div#main_container p#container_txt {
+        animation: spin 0.3s linear infinite;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotateZ(360deg);
+          color: #00ffba;
+        }
+      }
+
+      div#main_container {
+        position: relative;
+        margin: 0 auto;
+        background: rgba(0, 0, 0, 0);
+        width: 300px;
+        height: 120px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        user-select: none;
+        cursor: not-allowed;
+        z-index: 1;
+      }
+
+      div#main_container p#container_txt {
+        font-family: "Poppins", sans-serif;
+        font-size: 20px;
+        line-height: 125%;
+        text-align: center;
+        text-transform: uppercase;
+        font-style: normal;
+        font-weight: 900;
+        margin: 0;
+        color: #00ffba;
+        animation-direction: reverse;
+      }
+
+      div#main_container p#container_txt span#user_name {
+        position: relative;
+        color: white;
+        right: 0.7vmin;
+        font-size: 25px;
+      }
+
+      div#main_container::before,
+      div#main_container::after {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border-radius: 35px;
+        content: "";
+        animation-direction: reverse;
+        mix-blend-mode: multiply;
+      }
+
+      div#main_container::before {
+        top: 1px;
+        left: 1px;
+        background: #ff0066;
+        z-index: -1;
+      }
+
+      div#main_container::after {
+        bottom: 1px;
+        right: 1px;
+        background: #00ffba;
+        z-index: -2;
+      }
+
+      #royal_container{
+        display: block;
+        position: fixed;
+        right: 150px;
+        top: 100px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="royal_container">
+      <div id='main_container'>
+          <p id='container_txt'>
+            New Member<br> <span id='user_name'>{name}</span>
+          </p>
+      </div>  	
+    </div>
+</body>
+</html>
