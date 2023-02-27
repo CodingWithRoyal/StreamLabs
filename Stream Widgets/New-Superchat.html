@@ -1,0 +1,248 @@
+<html>
+  <head>
+    <style>
+      @import url("https://fonts.googleapis.com/css?family=Roboto:400,500,900");
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+      }
+
+      span {
+        font-family: Roboto, sans-serif;
+      }
+
+      .container {
+        width: 360px;
+        height: 100%;
+        top: 0;
+        right: 125px;
+        position: fixed;
+        overflow: hidden;
+      }
+
+      .box {
+        background: white;
+        padding: 10% 20px 10px;
+        box-shadow: 0px 20px 25px -20px #000000;
+      }
+
+      .coin-container {
+        width: 90px;
+        margin: 0px auto;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        animation: coinA 5s cubic-bezier(1, -0.19, 0.24, 0.2);
+        opacity: 0;
+        z-index: 10;
+      }
+      .coin-container .coin {
+        width: 90px;
+        height: 90px;
+        background: #ffbd0b;
+        border-radius: 50%;
+        border-top: 7px solid #ffd84c;
+        border-left: 7px solid #ffd84c;
+        border-right: 7px solid #d57e08;
+        border-bottom: 7px solid #d57e08;
+        margin: 0 auto;
+        transform: rotate(45deg);
+        position: relative;
+      }
+      .coin-container .coin .amount {
+        text-align: center;
+        line-height: 65px;
+        margin: 9px 9px;
+        width: 60px;
+        height: 60px;
+        background: #f0a608;
+        border-radius: 50%;
+        border-bottom: 2px solid #ffd84c;
+        border-right: 2px solid #ffd84c;
+        border-left: 2px solid #d57e08;
+        border-top: 2px solid #d57e08;
+      }
+      .coin-container .coin .amount span {
+        font-weight: 900;
+        color: #ffffff;
+        font-size: 20px;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        text-shadow: 0 3px 0 #cb7407;
+        transform: rotate(-45deg);
+        position: absolute;
+        margin: -8px -36px;
+      }
+
+      .message-container {
+        width: 350px;
+        margin: 0px auto;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        animation: messageA 4.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+        opacity: 0;
+        height: auto;
+      }
+      .message-container .message {
+        text-align: left;
+      }
+      .message-container .message span#alert-user-message {
+        font-size: 15px  !important;
+        color: black !important;
+      }
+      .message-container .nick {
+        width: 100%;
+        text-align: right;
+        margin: 10px 0;
+      }
+      .message-container .nick span {
+        font-weight: 900;
+        color: black;
+      }
+
+      .particles {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        left: 50%;
+        right: 50%;
+      }
+      .particles .heart svg {
+        fill: red;
+        opacity: 0;
+        position: absolute;
+        width: 25px;
+      }
+      .particles .heart:nth-of-type(1) svg {
+        animation: heart1 1.5s 5.1s;
+      }
+      .particles .heart:nth-of-type(2) svg {
+        animation: heart2 1.5s 5s;
+      }
+      .particles .heart:nth-of-type(3) svg {
+        animation: heart3 1.5s 5.2s;
+      }
+
+      @keyframes coinA {
+        0% {
+          margin: 0 0;
+          opacity: 1;
+        }
+        13% {
+          margin: -75px 0;
+        }
+        20% {
+          margin: -75px 0;
+        }
+        80% {
+          margin: -75px 0;
+        }
+        75% {
+          transform: translate(-50%, -50%) rotate(20deg);
+        }
+        95% {
+          transform: translate(-50%, -50%) rotate(-60deg);
+        }
+        100% {
+          transform: translate(-50%, -50%) rotate(0deg);
+          margin: 1000px 0;
+          opacity: 1;
+        }
+      }
+      @keyframes messageA {
+        0% {
+          transform: translate(-50%, -50%) scale(0);
+          opacity: 0;
+          /* Add the blur effect */
+          filter: blur(8px);
+          -webkit-filter: blur(8px);
+        }
+        10% {
+          transform: translate(-50%, -50%) scale(1);
+          opacity: 1;
+        }
+        20% {
+          filter: blur(0);
+          -webkit-filter: blur(0);
+        }
+        95% {
+          transform: translate(-50%, -50%) scale(1);
+        }
+        100% {
+          transform: translate(-50%, -50%) scale(0);
+          opacity: 1;
+        }
+      }
+      @keyframes heart1 {
+        0% {
+          opacity: 1;
+          width: 25px;
+          transform: rotate(-15deg);
+        }
+        100% {
+          margin: -85px 40px;
+          opacity: 0;
+        }
+      }
+      @keyframes heart2 {
+        0% {
+          opacity: 1;
+          width: 19px;
+          transform: rotate(25deg);
+        }
+        90% {
+          margin: -95px -32px;
+          opacity: 0;
+        }
+      }
+      @keyframes heart3 {
+        0% {
+          opacity: 1;
+          width: 15px;
+          transform: rotate(54deg);
+        }
+        100% {
+          margin: -150px 12px;
+          opacity: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class='container'>
+      <div class='coin-container'>
+        <div class='coin'>
+          <div class='amount'>
+            <span>{amount}</span>
+          </div>
+        </div>
+      </div>
+      <div class='message-container box'>
+        <div class='message'>
+          <span id="alert-user-message">{userMessage}</span>
+        </div>
+        <div class='nick'>
+          <span>{name}</span>
+        </div>
+      </div>
+      <div class='particles'>
+        <div class='heart'>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 51.997 51.997"><path d="M51.911,16.242C51.152,7.888,45.239,1.827,37.839,1.827c-4.93,0-9.444,2.653-11.984,6.905  c-2.517-4.307-6.846-6.906-11.697-6.906c-7.399,0-13.313,6.061-14.071,14.415c-0.06,0.369-0.306,2.311,0.442,5.478  c1.078,4.568,3.568,8.723,7.199,12.013l18.115,16.439l18.426-16.438c3.631-3.291,6.121-7.445,7.199-12.014  C52.216,18.553,51.97,16.611,51.911,16.242z"></path></svg>
+        </div>
+        <div class='heart'>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 51.997 51.997"><path d="M51.911,16.242C51.152,7.888,45.239,1.827,37.839,1.827c-4.93,0-9.444,2.653-11.984,6.905  c-2.517-4.307-6.846-6.906-11.697-6.906c-7.399,0-13.313,6.061-14.071,14.415c-0.06,0.369-0.306,2.311,0.442,5.478  c1.078,4.568,3.568,8.723,7.199,12.013l18.115,16.439l18.426-16.438c3.631-3.291,6.121-7.445,7.199-12.014  C52.216,18.553,51.97,16.611,51.911,16.242z"></path></svg>
+        </div>
+        <div class='heart'>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 51.997 51.997"><path d="M51.911,16.242C51.152,7.888,45.239,1.827,37.839,1.827c-4.93,0-9.444,2.653-11.984,6.905  c-2.517-4.307-6.846-6.906-11.697-6.906c-7.399,0-13.313,6.061-14.071,14.415c-0.06,0.369-0.306,2.311,0.442,5.478  c1.078,4.568,3.568,8.723,7.199,12.013l18.115,16.439l18.426-16.438c3.631-3.291,6.121-7.445,7.199-12.014  C52.216,18.553,51.97,16.611,51.911,16.242z"></path></svg>
+        </div>
+      </div>
+    </div>
+</body>
+</html>
