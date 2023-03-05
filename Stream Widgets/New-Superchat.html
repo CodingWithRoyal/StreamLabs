@@ -106,6 +106,11 @@
         font-weight: 900;
         color: black;
       }
+      .message-container .nick small {
+        font-size: 10px  !important;
+        font-weight: 700 !important;
+        color: black !important;
+      }
 
       .particles {
         position: absolute;
@@ -214,6 +219,29 @@
         }
       }
     </style>
+    <script type="text/javascript">
+      var preFormattedCash = null
+
+      const formatCash = n => {
+        const currency = n.charAt(0)
+        const amount = n.substring(1)
+        if (amount < 1e3) return currency+amount;
+        if (amount >= 1e3 && amount < 1e6) return currency+(amount / 1e3).toFixed(1) + "K";
+        if (amount >= 1e6 && amount < 1e9) return currency+(amount / 1e6).toFixed(1) + "M";
+        if (amount >= 1e9 && amount < 1e12) return currency+(amount / 1e9).toFixed(1) + "B";
+        if (amount >= 1e12) return currency+(amount / 1e12).toFixed(1) + "T";
+      }
+
+      setInterval(()=>{
+        const amountElement = document.getElementsByClassName("amount")[0].getElementsByTagName("span")[0]
+        const amount = amountElement.textContent
+        if (preFormattedCash !== amount) {
+          preFormattedCash = formatCash(amount)
+          preFormattedCash = preFormattedCash.replace(".0", "")
+          amountElement.textContent = preFormattedCash
+        }
+      }, 250)
+    </script>
   </head>
   <body>
     <div class='container'>
@@ -229,7 +257,7 @@
           <span id="alert-user-message">{userMessage}</span>
         </div>
         <div class='nick'>
-          <span>{name}</span>
+          <small id="alert-message">{messageTemplate}</small> <span>{name}</span>
         </div>
       </div>
       <div class='particles'>
