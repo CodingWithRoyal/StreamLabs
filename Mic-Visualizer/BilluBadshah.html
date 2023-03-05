@@ -1,0 +1,241 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+
+  <style>
+    img {
+      width: 400px;
+      display: none;
+    }
+
+    #idle {
+      animation: swing ease-in-out 1s infinite alternate;
+    }
+    @keyframes swing {
+      0% { transform: rotate(0.5deg); }
+      100% { transform: rotate(-0.5deg); }
+    }
+
+    #talking {
+      animation: shake 0.75s;
+      animation-iteration-count: infinite
+    }
+    @keyframes shake {
+      0% { transform: translate(0.5px, 0.5px) rotate(0deg); }
+      10% { transform: translate(-0.5px, -1px) rotate(-0.5deg); }
+      20% { transform: translate(-1.5px, 0px) rotate(0.5deg); }
+      30% { transform: translate(1.5px, 1px) rotate(0deg); }
+      40% { transform: translate(0.5px, -0.5px) rotate(0.5deg); }
+      50% { transform: translate(-0.5px, 1px) rotate(-0.5deg); }
+      60% { transform: translate(-1.5px, 0.5px) rotate(0deg); }
+      70% { transform: translate(1.5px, 0.5px) rotate(-0.5deg); }
+      80% { transform: translate(-0.5px, -0.5px) rotate(0.5deg); }
+      90% { transform: translate(0.5px, 1px) rotate(0deg); }
+      100% { transform: translate(0.5px, -1px) rotate(-0.5deg); }
+    }
+  </style>
+
+  <script src="./node_modules/obs-websocket-js/dist/obs-ws.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+
+</head>
+
+<body>
+    <div id="idle">
+        <img class="eyeOpen" src="./assets/idle-eye-open.png" />
+        <img class="eyeClose" src="./assets/idle-eye-close.png" />
+        <img class="mustacheMoved" src="./assets/idle-mustache-moving.png" />
+    </div>
+
+    <div id="talking">
+        <img class="talking" src="./assets/talking.png" />
+        <img class="talking-1" src="./assets/talking-1.png" />
+        <img class="talking-2" src="./assets/talking-2.png" />
+        <img class="talking-3" src="./assets/talking-3.png" />
+        <img class="talking-4" src="./assets/talking-4.png" />
+    </div>
+
+    <script type="text/javascript">
+        const BILLU = {
+          interval: null,
+          state: "null",
+          lastStateChange: 0,
+          closeEyes: ()=>{
+            $("#idle").show();
+            $("#talking").hide();
+
+            $(".eyeOpen").hide();
+            $(".eyeClose").show();
+            $(".mustacheMoved").hide();
+          },
+          openEyes: ()=>{
+            $("#idle").show();
+            $("#talking").hide();
+
+            $(".eyeOpen").show();
+            $(".eyeClose").hide();
+            $(".mustacheMoved").hide();
+          },
+          moveMustache: ()=>{
+            $("#idle").show();
+            $("#talking").hide();
+
+            $(".eyeOpen").hide();
+            $(".eyeClose").hide();
+            $(".mustacheMoved").show();
+
+            setTimeout(() => {
+              $(".mustacheMoved").hide();
+              $(".eyeOpen").show();
+            }, 100)
+          },
+          blink: ()=>{
+            BILLU.closeEyes()
+            setTimeout(()=>{
+              BILLU.openEyes()
+            }, 250)
+          },
+          talking: ()=>{
+            $("#idle").hide();
+            $("#talking").show();
+
+            $(".talking").hide();
+            $(".talking-1").hide();
+            $(".talking-2").hide();
+            $(".talking-3").hide();
+            $(".talking-4").hide();
+
+            $(".talking").show();
+
+            setTimeout(()=>{
+              $(".talking").hide();
+              $(".talking-1").show();
+              $(".talking-2").hide();
+              $(".talking-3").hide();
+              $(".talking-4").hide();
+            }, 100)
+
+            setTimeout(()=>{
+              $(".talking").hide();
+              $(".talking-1").hide();
+              $(".talking-2").show();
+              $(".talking-3").hide();
+              $(".talking-4").hide();
+            }, 200)
+
+            setTimeout(()=>{
+              $(".talking").hide();
+              $(".talking-1").hide();
+              $(".talking-2").hide();
+              $(".talking-3").show();
+              $(".talking-4").hide();
+            }, 300)
+
+            setTimeout(()=>{
+              $(".talking").hide();
+              $(".talking-1").hide();
+              $(".talking-2").hide();
+              $(".talking-3").hide();
+              $(".talking-4").show();
+            }, 400)
+          },
+          stop: ()=>{
+            $(".eyeOpen").hide();
+            $(".eyeClose").hide();
+            $(".mustacheMoved").hide();
+
+            $("#talking").hide();
+
+            clearInterval(BILLU.interval)
+          }
+        }
+
+        const idleAnimation = () => {
+          if (BILLU.state === "idle") {
+            return
+          }
+          BILLU.state = "idle"
+          
+          BILLU.stop()
+          BILLU.openEyes()
+
+          BILLU.interval = setInterval(()=>{
+            const rand = Math.floor(Math.random() * 10) + 1
+            if (rand > 7) {
+              setTimeout(()=>{
+                BILLU.moveMustache()
+              }, Math.random() * 500)
+            } else {
+              setTimeout(()=>{
+                BILLU.blink()
+              }, Math.random() * 1000)
+            }
+          }, 1000)
+        }
+
+        const talkAnimation = () => {
+          if (BILLU.state === "talking") {
+            return
+          }
+          BILLU.state = "talking"
+
+          BILLU.stop()
+
+          BILLU.talking();
+        }
+    </script>
+
+    <script type="text/javascript">
+      const obs = new OBSWebSocket();
+
+      const connect = async() => {
+
+        try {
+          const {
+            obsWebSocketVersion,
+            negotiatedRpcVersion
+          } = await obs.connect('ws://localhost:4455', 'rootroot', {
+            // eventSubscriptions: EventSubscription.All | EventSubscription.InputVolumeMeters,
+            eventSubscriptions: 1023 | 65536,
+            rpcVersion: 1
+          });
+          console.log(`Connected to server ${obsWebSocketVersion} (using RPC ${negotiatedRpcVersion})`)
+
+          obs.on('CurrentProgramSceneChanged', (event) => {
+            console.log('Current scene changed to', event.sceneName)
+          });
+
+          obs.on('InputVolumeMeters', (data) => {
+            data.inputs.forEach(e => {
+              // Computer => Desktop Audio
+              // Mic => Mic/Aux
+              if (e.inputName !== undefined && e.inputName === 'Mic/Aux') {
+                const left = e.inputLevelsMul[0].reduce((a, b) => a + b)
+                const right = e.inputLevelsMul[0].reduce((a, b) => a + b)
+
+                // console.log(`left: ${left} \t right: ${right}`)
+
+                if (BILLU.lastStateChange < Date.now()+1000) {
+                  BILLU.lastStateChange = Date.now()
+                  if ((left+right) > 0.025) {
+                    console.log("talking")
+                    talkAnimation()
+                  } else {
+                    console.log("idle")
+                    idleAnimation()
+                  }
+                }
+              }
+            });
+          })
+        } catch (error) {
+          console.error('Failed to connect', error.code, error.message);
+        } 
+
+      }
+
+      connect().then(r=>console.log)
+    </script>
+</body>
+
+</html>
